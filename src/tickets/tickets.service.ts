@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Ticket } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class TicketsService {
-  create(createTicketDto: CreateTicketDto) {
-    return 'This action adds a new ticket';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(data: Prisma.TicketCreateInput): Promise<Ticket> {
+    return await this.prisma.ticket.create({ data });
   }
 
-  findAll() {
-    return `This action returns all tickets`;
+  async findAll(): Promise<Ticket[]> {
+    return await this.prisma.ticket.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ticket`;
+  async findOne(id: number): Promise<Ticket> {
+    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    if (ticket === null) {
+      throw new NotFoundException('Ticket not found');
+    }
+
+    return ticket;
   }
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
+  async update(id: number, data: Prisma.TicketUpdateInput): Promise<Ticket> {
+    try {
+      return await this.prisma.ticket.update({ data, where: { id } });
+    } catch {
+      throw new NotFoundException('Ticket not found');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
+  async remove(id: number): Promise<Ticket> {
+    try {
+      return await this.prisma.ticket.delete({ where: { id } });
+    } catch {
+      throw new NotFoundException('Ticket not found');
+    }
   }
 }

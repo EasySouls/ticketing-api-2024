@@ -4,11 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { Prisma } from '@prisma/client';
 import { TicketsService } from './tickets.service';
 
 @Controller('tickets')
@@ -16,8 +16,8 @@ export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Post()
-  create(@Body() createTicketDto: CreateTicketDto) {
-    return this.ticketsService.create(createTicketDto);
+  create(@Body() data: Prisma.TicketCreateInput) {
+    return this.ticketsService.create(data);
   }
 
   @Get()
@@ -26,17 +26,20 @@ export class TicketsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(+id, updateTicketDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: Prisma.TicketUpdateInput,
+  ) {
+    return this.ticketsService.update(id, data);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketsService.remove(id);
   }
 }
