@@ -16,7 +16,7 @@ export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Post()
-  create(@Body() data: Prisma.TicketCreateInput) {
+  create(@Body() data: Prisma.TicketUncheckedCreateInput) {
     return this.ticketsService.create(data);
   }
 
@@ -33,7 +33,7 @@ export class TicketsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: Prisma.TicketUpdateInput,
+    @Body() data: Prisma.TicketUncheckedUpdateInput,
   ) {
     return this.ticketsService.update(id, data);
   }

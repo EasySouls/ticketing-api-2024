@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Board, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -7,7 +11,11 @@ export class BoardsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: Prisma.BoardCreateInput): Promise<Board> {
-    return await this.prisma.board.create({ data });
+    try {
+      return await this.prisma.board.create({ data });
+    } catch {
+      throw new BadRequestException('Invalid boardId');
+    }
   }
 
   async findAll(): Promise<Board[]> {

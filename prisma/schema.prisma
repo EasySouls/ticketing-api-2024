@@ -26,11 +26,20 @@ model Ticket {
   createdAt DateTime    @default(now())
   boardId   Int
   board     Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  labels    Label[]
 }
 
 model Board {
   id        Int      @id @default(autoincrement())
   title     String
+  createdAt DateTime @default(now())
+  tickets   Ticket[]
+}
+
+model Label {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
   createdAt DateTime @default(now())
   tickets   Ticket[]
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, Ticket } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -6,8 +10,12 @@ import { PrismaService } from 'nestjs-prisma';
 export class TicketsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.TicketCreateInput): Promise<Ticket> {
-    return await this.prisma.ticket.create({ data });
+  async create(data: Prisma.TicketUncheckedCreateInput): Promise<Ticket> {
+    try {
+      return await this.prisma.ticket.create({ data });
+    } catch {
+      throw new BadRequestException('Invalid ticketId');
+    }
   }
 
   async findAll(): Promise<Ticket[]> {
@@ -23,7 +31,10 @@ export class TicketsService {
     return ticket;
   }
 
-  async update(id: number, data: Prisma.TicketUpdateInput): Promise<Ticket> {
+  async update(
+    id: number,
+    data: Prisma.TicketUncheckedUpdateInput,
+  ): Promise<Ticket> {
     try {
       return await this.prisma.ticket.update({ data, where: { id } });
     } catch {
