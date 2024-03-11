@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Label } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateLabelDto } from './dto/create-label.dto';
 import { UpdateLabelDto } from './dto/update-label.dto';
+import { Label } from './entities/label.entity';
 
 @Injectable()
 export class LabelsService {
