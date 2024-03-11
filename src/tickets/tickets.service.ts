@@ -19,11 +19,14 @@ export class TicketsService {
   }
 
   async findAll(): Promise<Ticket[]> {
-    return await this.prisma.ticket.findMany();
+    return await this.prisma.ticket.findMany({ include: { labels: true } });
   }
 
   async findOne(id: number): Promise<Ticket> {
-    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      include: { labels: true },
+    });
     if (ticket === null) {
       throw new NotFoundException('Ticket not found');
     }

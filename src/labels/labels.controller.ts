@@ -8,7 +8,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { CreateLabelDto } from './dto/create-label.dto';
+import { UpdateLabelDto } from './dto/update-label.dto';
 import { LabelsService } from './labels.service';
 
 @Controller('labels')
@@ -16,7 +17,7 @@ export class LabelsController {
   constructor(private readonly labelsService: LabelsService) {}
 
   @Post()
-  create(@Body() createLabelDto: Prisma.LabelCreateInput) {
+  create(@Body() createLabelDto: CreateLabelDto) {
     return this.labelsService.create(createLabelDto);
   }
 
@@ -33,7 +34,7 @@ export class LabelsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateLabelDto: Prisma.LabelUpdateInput,
+    @Body() updateLabelDto: UpdateLabelDto,
   ) {
     return this.labelsService.update(id, updateLabelDto);
   }
