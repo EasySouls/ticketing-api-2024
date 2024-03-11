@@ -42,4 +42,20 @@ export class TicketsController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.ticketsService.remove(id);
   }
+
+  @Patch(':ticketId/labels/:labelId')
+  addLabel(
+    @Param('ticketId', ParseIntPipe) ticketId: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ) {
+    return this.ticketsService.addLabel(ticketId, labelId);
+  }
+
+  @Delete(':ticketId/labels/:labelId')
+  removeLabel(
+    @Param('ticketId', ParseIntPipe) ticketId: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ) {
+    return this.ticketsService.removeLabel(ticketId, labelId);
+  }
 }

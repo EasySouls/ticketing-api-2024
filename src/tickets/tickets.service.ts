@@ -49,4 +49,26 @@ export class TicketsService {
       throw new NotFoundException('Ticket not found');
     }
   }
+
+  async addLabel(ticketId: number, labelId: number) {
+    try {
+      return await this.prisma.ticket.update({
+        where: { id: ticketId },
+        data: { labels: { connect: { id: labelId } } },
+      });
+    } catch {
+      throw new BadRequestException();
+    }
+  }
+
+  async removeLabel(ticketId: number, labelId: number) {
+    try {
+      return await this.prisma.ticket.update({
+        where: { id: ticketId },
+        data: { labels: { disconnect: { id: labelId } } },
+      });
+    } catch {
+      throw new BadRequestException();
+    }
+  }
 }
